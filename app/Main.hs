@@ -11,7 +11,7 @@ main = do
   messagejson <- B.readFile "tests/message.json"
   let message = decode messagejson :: Maybe M.MsgSegs
   print message
-  print $ encode $ M.textSegment "Hello Haskell"
+  print $ encode $ M.text "Hello Haskell"
   eventjson <- B.readFile "tests/event.json"
   let event = decode eventjson :: Maybe E.Event
   print event

@@ -12,17 +12,14 @@ appOBC pending = do
   conn <- WS.acceptRequest pending
   WS.withPingThread conn 30 (return ())
     $ do
-      msg <- WS.receive conn
+      msg <- WS.receiveDataMessage conn
       case msg of
-        WS.DataMessage _ _ _ (WS.Text s _) -> do
+        WS.Text s _ -> do
           let event = decode s :: Maybe Event
           print event
-        WS.DataMessage {} -> do
+        WS.Binary b -> do
           print "get!"
           WS.sendTextData conn ("get!" :: T.Text)
-        WS.ControlMessage (WS.Ping b) -> WS.sendBinaryData conn b
-        WS.ControlMessage (WS.Pong _) -> print "pong!"
-        WS.ControlMessage WS.Close {} -> return ()
 
 runAppOBC :: IO ()
 runAppOBC = WS.runServer "127.0.0.1" 8080 appOBC
