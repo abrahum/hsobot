@@ -4,7 +4,10 @@ import           Data.Aeson
 import qualified Data.ByteString.Lazy as B
 import qualified OneBot.MsgSeg as M
 import qualified OneBot.Event as E
-import           OneBot.OBC (runAppOBC)
+import qualified OneBot.OBC as O
+
+echo :: O.EventHandler
+echo e bots echos = print e
 
 main :: IO ()
 main = do
@@ -15,4 +18,4 @@ main = do
   eventjson <- B.readFile "tests/event.json"
   let event = decode eventjson :: Maybe E.Event
   print event
-  runAppOBC
+  O.runAppOBC echo

@@ -4,8 +4,10 @@ module OneBot.Event where
 
 import           Data.Aeson
 import           Control.Lens.Lens
-import           Data.Aeson.KeyMap (insert)
+import qualified Data.Aeson.KeyMap as K
 import qualified Data.Text as T
+import           OneBot.Action (Resp)
+import           Data.Maybe (isJust)
 
 data Event = Event { event_id :: String
                    , impl :: String
@@ -31,17 +33,17 @@ instance FromJSON Event where
     <*> v .: "sub_type"
     ?? v
 
-_insert :: (ToJSON a) => Key -> a -> Object -> Object
-_insert k v = insert k (toJSON v)
+insert :: (ToJSON a) => Key -> a -> Object -> Object
+insert k v = K.insert k (toJSON v)
 
 instance ToJSON Event where
   toJSON (Event id impl platform self_id time ty detail_type sub_type c) =
     Object
-    $ _insert "id" id
-    $ _insert "impl" impl
-    $ _insert "platform" platform
-    $ _insert "self_id" self_id
-    $ _insert "time" time
-    $ _insert "type" ty
-    $ _insert "detail_type" detail_type
-    $ _insert "sub_type" sub_type c
+    $ insert "id" id
+    $ insert "impl" impl
+    $ insert "platform" platform
+    $ insert "self_id" self_id
+    $ insert "time" time
+    $ insert "type" ty
+    $ insert "detail_type" detail_type
+    $ insert "sub_type" sub_type c
